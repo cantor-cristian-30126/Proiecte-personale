@@ -1,0 +1,52 @@
+const int led = 9;
+const int sensor = 8;
+const int buzzer = 10;
+const int button = 11;
+const int motorAlarm = 12;  
+const int motorDoor = 13;   
+bool sensor_value;
+bool state = false;
+unsigned long alarmStartTime = 0;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(sensor, INPUT);
+  pinMode(button, INPUT_PULLUP);
+  pinMode(motorAlarm, OUTPUT); 
+  pinMode(motorDoor, OUTPUT);   
+}
+
+void loop() {
+  sensor_value = digitalRead(sensor);
+  
+  if (sensor_value == true) {
+    state = true;
+    alarmStartTime = millis();
+    digitalWrite(motorAlarm, HIGH);  
+    delay(2000);  
+    digitalWrite(motorAlarm, LOW);  
+  }
+  
+  if (state == true) {
+    digitalWrite(led, HIGH);
+    tone(buzzer, 1000);
+    delay(500);
+    digitalWrite(led, LOW);
+    noTone(buzzer);
+    delay(500);
+    
+    if (millis() - alarmStartTime >= 36000 || digitalRead(button) == LOW) {
+      state = false;
+    }
+  }
+  else {
+    digitalWrite(led, LOW);
+    
+    if (digitalRead(button) == LOW) {
+      digitalWrite(motorDoor, HIGH);  
+      delay(2000);  
+      digitalWrite(motorDoor, LOW);  
+    }
+  }
+}

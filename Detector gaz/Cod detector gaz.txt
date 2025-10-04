@@ -1,0 +1,25 @@
+const int gasPin = A0;      Pinul analogic utilizat pentru citirea valorii senzorului de gaz
+const int buzzerPin = 9;    Pinul digital utilizat pentru controlul difuzorului
+
+const int gasThreshold = 500;    Valoarea prag pentru nivelul de gaz
+
+void setup() {
+  Serial.begin(9600);    Inițializare comunicare serială pentru a afișa rezultatele citirii senzorului de gaz
+  pinMode(buzzerPin, OUTPUT);    Setare pin difuzor ca ieșire
+}
+
+void loop() {
+  int gasValue = analogRead(gasPin);    Citirea valorii analogice de pe pinul senzorului de gaz
+  Serial.print(Gas value );
+  Serial.println(gasValue);    Afișarea valorii citite
+  
+  if (gasValue  gasThreshold) {
+     Nivelul de gaz depășește pragul, activăm difuzorul
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+     Nivelul de gaz este sub prag, dezactivăm difuzorul
+    digitalWrite(buzzerPin, LOW);
+  }
+  
+  delay(1000);    Așteptare de 1 secundă între citiri
+}
